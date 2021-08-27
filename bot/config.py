@@ -1,11 +1,11 @@
 import tweepy
-import pprint
 import os
+import logging
 
-from helpers import GetRandomQuote
+logger = logging.getLogger()
 
 
-def TweepyAuth():
+def create_api():
     token = os.environ.get('TWITTER_API_ACCESS_TOKEN')
     token_secret = os.environ.get('TWITTER_API_ACCESS_TOKEN_SECRET')
 
@@ -19,21 +19,9 @@ def TweepyAuth():
 
     try:
         api.verify_credentials()
-        print("Authentication Successful")
-        return api
-    except BaseException:
-        print("Authentication Error")
-        return None
+    except Exception as e:
+        logger.error("Error creating API", exc_info=True)
+        raise e
 
-
-# Create a new instance of the api wrapper.
-api = TweepyAuth()
-
-# Return the authenticated User.
-me = api.me()
-
-qq = None
-while qq is None or len(qq[1]) > 140:
-    qq = GetRandomQuote()
-
-api.update_status(qq[1])
+    logger.info("API Created Successfully")
+    return api

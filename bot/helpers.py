@@ -4,19 +4,19 @@ import pickle
 import random
 
 
-def CleanQuote(quote_object):
+def clean_quote(quote_object):
     s = "".join(quote_object["lines"])
     return s
 
 
-def PersistData(all_quotes):
+def persist_data(all_quotes):
     # Pickle our nice clean dict so we can use it later without having to parse
     # the JSON file again.
     with open('data.pickle', 'wb') as f:
         pickle.dump(all_quotes, f, pickle.HIGHEST_PROTOCOL)
 
 
-def ParseJson():
+def parse_json():
     try:
         ret = {}
 
@@ -28,22 +28,22 @@ def ParseJson():
         # Map<show, []quote>.
         for quote in data:
             show_name = quote["show"]
-            cq = CleanQuote(quote)
+            cq = clean_quote(quote)
             if show_name not in ret:
                 ret[show_name] = []
             ret[show_name].append(cq)
-        PersistData(ret)
+        persist_data(ret)
 
     except Exception as e:
         print(e)
 
 
-def SetupData():
+def setup_data():
     try:
         # Check if a pickle file already exists, if not then parse the JSON file
         # and pickle it.
         if not os.path.isfile('data.pickle'):
-            ParseJson()
+            parse_json()
 
         with open('data.pickle', 'rb') as f:
             # The protocol version used is detected automatically, so we do not
@@ -55,8 +55,8 @@ def SetupData():
         print(e)
 
 
-def GetRandomQuote():
-    all_quotes = SetupData()
+def get_random_quote():
+    all_quotes = setup_data()
 
     # Pick a random key and a random element from that key's associated list
     # of quotes.
@@ -65,6 +65,6 @@ def GetRandomQuote():
 
     # Remove the quote we randomly picked and persist.
     all_quotes[k].remove(q)
-    PersistData(all_quotes)
+    persist_data(all_quotes)
 
     return [k, q]
