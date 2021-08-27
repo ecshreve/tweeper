@@ -5,7 +5,7 @@ import random
 
 
 def CleanQuote(quote_object):
-    s = "".join(quote_object["lines"])[:-1]
+    s = "".join(quote_object["lines"])
     return s
 
 
@@ -55,7 +55,9 @@ def SetupData():
         print(e)
 
 
-def GetRandomQuote(all_quotes):
+def GetRandomQuote():
+    all_quotes = SetupData()
+
     # Pick a random key and a random element from that key's associated list
     # of quotes.
     k = random.choice(list(all_quotes.keys()))
@@ -65,11 +67,4 @@ def GetRandomQuote(all_quotes):
     all_quotes[k].remove(q)
     PersistData(all_quotes)
 
-    return {k: q}
-
-
-d = SetupData()
-print({x: len(d[x]) for x in d.keys()})
-q = GetRandomQuote(d)
-print(q)
-print({x: len(d[x]) for x in d.keys()})
+    return [k, q]

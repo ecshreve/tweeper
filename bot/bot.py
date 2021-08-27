@@ -1,6 +1,8 @@
 import tweepy
-
+import pprint
 import os
+
+from helpers import GetRandomQuote
 
 
 def TweepyAuth():
@@ -30,8 +32,8 @@ api = TweepyAuth()
 # Return the authenticated User.
 me = api.me()
 
-# Create a new status and fetch the timeline.
-api.update_status("this is a test tweet")
-s = api.user_timeline(me.id)
+qq = None
+while qq is None or len(qq[1]) > 140:
+    qq = GetRandomQuote()
 
-print(s)
+api.update_status(qq[1])
